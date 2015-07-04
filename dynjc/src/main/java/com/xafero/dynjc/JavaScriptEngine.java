@@ -129,8 +129,17 @@ public class JavaScriptEngine extends AbstractScriptEngine implements ScriptEngi
 				script = script.replace(importStat, "");
 			}
 		}
-		// Write type header
 		lines.add("");
+		// Look for annotations
+		for (String maybe : script.split('\n' + "")) {
+			maybe = maybe.trim();
+			if (maybe.matches("@(.)+")) {
+				String annotStat = maybe;
+				lines.add(annotStat);
+				script = script.replace(annotStat, "");
+			}
+		}
+		// Write type header
 		lines.add(String.format("public class %s implements Callable<Object> {", className));
 		lines.add("");
 		// Write setup constructor
