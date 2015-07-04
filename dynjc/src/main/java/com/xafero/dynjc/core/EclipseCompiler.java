@@ -74,6 +74,8 @@ public class EclipseCompiler {
 			int id = Integer.parseInt(subParts[0]);
 			MessageType mtype = MessageType.valueOf(subParts[1]);
 			subParts = parts[1].split(" \\(at line ");
+			if (subParts.length != 2)
+				continue;
 			File file = new File(subParts[0].trim());
 			int line = Integer.parseInt(subParts[1].replace(')', ' ').trim());
 			messages.add(new EclipseMessage(file, id, mtype, line, place, msg));
