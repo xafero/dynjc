@@ -43,7 +43,7 @@ public class JavaScriptEngine extends AbstractScriptEngine implements ScriptEngi
 	public JavaScriptEngine(JavaScriptEngineFactory factory) throws IOException {
 		this.factory = factory;
 		this.compiler = new EclipseCompiler();
-		this.loader = new MemoryClassLoader(new HashMap<String, byte[]>(), null);
+		this.loader = new MemoryClassLoader(new HashMap<String, byte[]>(), null, getClass().getClassLoader());
 	}
 
 	@Override
