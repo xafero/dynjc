@@ -79,4 +79,12 @@ public class EclipseCompiler {
 		}
 		return messages;
 	}
+
+	public boolean addToClassPath(File entry) {
+		String path = entry.getAbsolutePath();
+		if (classpath.contains(path))
+			return false;
+		classpath.add(path);
+		return true;
+	}
 }

@@ -3,6 +3,8 @@ package com.xafero.dynjc;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URI;
+import java.security.CodeSource;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -125,8 +127,15 @@ public class JavaScriptEngine extends AbstractScriptEngine implements ScriptEngi
 		Bindings bnd = ctx.getBindings(ScriptContext.ENGINE_SCOPE);
 		for (String key : bnd.keySet()) {
 			Object value = bnd.get(key);
-			String type = value.getClass().getName();
+			Class<?> clazz = value.getClass();
+			String type = clazz.getName();
 			lines.add(String.format("\t\t" + "this.%s = (%s) ctx.get(\"%s\");", key, type, key));
+			// Fetch source of code
+			CodeSource cs = clazz.getProtectionDomain().getCodeSource();
+			if (cs != null) {
+				File rf = new File(URI.create(cs.getLocation() + ""));
+				compiler.addToClassPath(rf);
+			}
 		}
 		// Rest of constructor
 		lines.add('\t' + "}");
