@@ -1,6 +1,7 @@
 package com.xafero.dynjc.core;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -39,6 +40,18 @@ public class MemoryClassLoader extends URLClassLoader {
 		if (buf != null) {
 			classBytes.remove(name);
 			return defineClass(name, buf, 0, buf.length);
+		}
+		ClassLoader parent = getParent();
+		if (parent != null) {
+			try {
+				Method fcm = ClassLoader.class.getDeclaredMethod("findClass", String.class);
+				fcm.setAccessible(true);
+				Object clazz = fcm.invoke(parent, name);
+				if (clazz != null)
+					return (Class<?>) clazz;
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 		}
 		return super.findClass(name);
 	}
