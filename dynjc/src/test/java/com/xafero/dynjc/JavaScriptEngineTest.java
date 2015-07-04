@@ -67,6 +67,15 @@ public class JavaScriptEngineTest {
 	}
 
 	@Test
+	public void testEvalWithImport() throws Exception {
+		String code = "import javax.script.Bindings; import javax.script.Compilable; "
+				+ "return Bindings.class.getSimpleName() + \" \" + Compilable.class.getSimpleName();";
+		Object result = engine.eval(code);
+		assertNotNull(result);
+		assertEquals("Bindings Compilable", result);
+	}
+
+	@Test
 	public void testGetFactory() {
 		ScriptEngineFactory factory;
 		assertNotNull(factory = engine.getFactory());

@@ -120,6 +120,16 @@ public class JavaScriptEngine extends AbstractScriptEngine implements ScriptEngi
 		lines.add("import java.io.*;");
 		lines.add("import java.util.*;");
 		lines.add("import java.util.concurrent.*;");
+		// Look for imports
+		for (String maybe : script.split(";")) {
+			maybe = maybe.trim();
+			if (maybe.matches("import (.)+")) {
+				String importStat = maybe + ";";
+				lines.add(importStat);
+				script = script.replace(importStat, "");
+			}
+		}
+		// Write type header
 		lines.add("");
 		lines.add(String.format("public class %s implements Callable<Object> {", className));
 		lines.add("");
