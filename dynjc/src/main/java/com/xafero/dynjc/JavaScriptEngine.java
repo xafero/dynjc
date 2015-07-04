@@ -40,9 +40,11 @@ public class JavaScriptEngine extends AbstractScriptEngine implements ScriptEngi
 	private final EclipseCompiler compiler;
 	private final MemoryClassLoader loader;
 
-	public JavaScriptEngine(JavaScriptEngineFactory factory) throws IOException {
+	public JavaScriptEngine(JavaScriptEngineFactory factory, boolean addCurrentPath) throws IOException {
 		this.factory = factory;
 		this.compiler = new EclipseCompiler();
+		if (addCurrentPath)
+			this.compiler.addJavaClassPath();
 		this.loader = new MemoryClassLoader(new HashMap<String, byte[]>(), null, getClass().getClassLoader());
 	}
 

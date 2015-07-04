@@ -145,7 +145,7 @@ public class JavaScriptEngineFactory implements ScriptEngineFactory {
 	@Override
 	public ScriptEngine getScriptEngine() {
 		try {
-			return new JavaScriptEngine(this);
+			return new JavaScriptEngine(this, true);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

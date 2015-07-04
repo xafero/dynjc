@@ -35,7 +35,8 @@ public class EclipseCompiler {
 	public boolean compile(File... files) {
 		String cpStr = Strings.toSimpleString(File.pathSeparator, classpath);
 		String fileStr = Strings.toSimpleString(" ", files);
-		String cmd = String.format("-%s -classpath %s -d %s %s", javaVer, cpStr, outDir, fileStr);
+		String warnOpt = "-nowarn";
+		String cmd = String.format("-%s -classpath %s %s -d %s %s", javaVer, cpStr, warnOpt, outDir, fileStr);
 		log.info("Executing => {}", cmd);
 		CompilationProgress progress = new LogCompilationProgress();
 		StringWriter stdOut = new StringWriter();
@@ -81,10 +82,17 @@ public class EclipseCompiler {
 	}
 
 	public boolean addToClassPath(File entry) {
+		if (!entry.exists() || !entry.canRead())
+			return false;
 		String path = entry.getAbsolutePath();
 		if (classpath.contains(path))
 			return false;
 		classpath.add(path);
 		return true;
+	}
+
+	public void addJavaClassPath() {
+		for (String path : System.getProperty("java.class.path").split(File.pathSeparator))
+			addToClassPath(new File(path));
 	}
 }
