@@ -135,6 +135,11 @@ public class JavaScriptEngine extends AbstractScriptEngine implements ScriptEngi
 			maybe = maybe.trim();
 			if (maybe.matches("@(.)+")) {
 				String annotStat = maybe;
+				// Allow multi-line annotations
+				if (annotStat.contains("(")) {
+					int begin = script.indexOf(annotStat);
+					annotStat = script.substring(begin, script.indexOf(')', begin) + 1);
+				}
 				lines.add(annotStat);
 				script = script.replace(annotStat, "");
 			}

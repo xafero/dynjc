@@ -84,6 +84,14 @@ public class JavaScriptEngineTest {
 	}
 
 	@Test
+	public void testEvalWithAnnotMulti() throws Exception {
+		String code = "@Deprecated(" + '\n' + ")" + '\n' + "return getClass().getAnnotation(Deprecated.class);";
+		Object result = engine.eval(code);
+		assertNotNull(result);
+		assertEquals(Deprecated.class, ((Deprecated) result).annotationType());
+	}
+
+	@Test
 	public void testGetFactory() {
 		ScriptEngineFactory factory;
 		assertNotNull(factory = engine.getFactory());
