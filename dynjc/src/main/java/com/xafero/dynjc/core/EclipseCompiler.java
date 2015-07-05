@@ -45,6 +45,7 @@ public class EclipseCompiler {
 			return result;
 		// Second stage: Real compilation
 		addClassLoader((URLClassLoader) getClass().getClassLoader());
+		addClassLoader((URLClassLoader) ClassLoader.getSystemClassLoader());
 		return compile(cpStr, warnOpt, "-proc:none", fileStr);
 	}
 
