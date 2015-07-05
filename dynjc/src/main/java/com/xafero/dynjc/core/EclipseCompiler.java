@@ -36,20 +36,20 @@ public class EclipseCompiler {
 	}
 
 	public boolean compile(File... files) {
-		String cpStr = Strings.toSimpleString(File.pathSeparator, classpath);
 		String fileStr = Strings.toSimpleString(" ", files);
 		String warnOpt = "-nowarn";
 		// First stage: Only annotations
-		boolean result = compile(cpStr, warnOpt, "-proc:only", fileStr);
+		boolean result = compile(warnOpt, "-proc:only", fileStr);
 		if (!result)
 			return result;
 		// Second stage: Real compilation
 		addClassLoader((URLClassLoader) getClass().getClassLoader());
 		addClassLoader((URLClassLoader) ClassLoader.getSystemClassLoader());
-		return compile(cpStr, warnOpt, "-proc:none", fileStr);
+		return compile(warnOpt, "-proc:none", fileStr);
 	}
 
-	private boolean compile(String cpStr, String warnOpt, String annotOpt, String fileStr) {
+	private boolean compile(String warnOpt, String annotOpt, String fileStr) {
+		String cpStr = Strings.toSimpleString(File.pathSeparator, classpath);
 		String cmd = String.format("-%s -classpath %s %s %s -d %s %s", javaVer, cpStr, warnOpt, annotOpt, outDir,
 				fileStr);
 		log.info("Executing => {}", cmd);
