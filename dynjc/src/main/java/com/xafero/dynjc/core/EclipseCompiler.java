@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,7 +39,18 @@ public class EclipseCompiler {
 		String cpStr = Strings.toSimpleString(File.pathSeparator, classpath);
 		String fileStr = Strings.toSimpleString(" ", files);
 		String warnOpt = "-nowarn";
-		String cmd = String.format("-%s -classpath %s %s -d %s %s", javaVer, cpStr, warnOpt, outDir, fileStr);
+		// First stage: Only annotations
+		boolean result = compile(cpStr, warnOpt, "-proc:only", fileStr);
+		if (!result)
+			return result;
+		// Second stage: Real compilation
+		addClassLoader((URLClassLoader) getClass().getClassLoader());
+		return compile(cpStr, warnOpt, "-proc:none", fileStr);
+	}
+
+	private boolean compile(String cpStr, String warnOpt, String annotOpt, String fileStr) {
+		String cmd = String.format("-%s -classpath %s %s %s -d %s %s", javaVer, cpStr, warnOpt, annotOpt, outDir,
+				fileStr);
 		log.info("Executing => {}", cmd);
 		CompilationProgress progress = new LogCompilationProgress();
 		StringWriter stdOut = new StringWriter();
@@ -96,5 +110,10 @@ public class EclipseCompiler {
 	public void addJavaClassPath() {
 		for (String path : System.getProperty("java.class.path").split(File.pathSeparator))
 			addToClassPath(new File(path));
+	}
+
+	public void addClassLoader(URLClassLoader loader) {
+		for (URL url : loader.getURLs())
+			addToClassPath(new File(URI.create(url + "")));
 	}
 }

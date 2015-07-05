@@ -4,7 +4,7 @@
 
 	<groupId>com.xafero.dynjc</groupId>
 	<artifactId>dynjc-jsr223</artifactId>
-	<version>0.5</version>
+	<version>0.6</version>
 	<packaging>jar</packaging>
 
 	<name>DynJC (Dynamic Java Compilation)</name>
